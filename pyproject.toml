@@ -36,6 +36,12 @@ description = ""
 packages = [
     { include = "oactool" }
 ]
+license = "MIT"
+homepage = "https://github.com/openautocomplete/oactool"
+repository = "https://github.com/openautocomplete/oactool"
+classifiers = [
+    "Topic :: Software Development :: Build Tools"
+]
 scripts = { oactool = 'oactool.main:main' }
 authors = ["Alexander Shishenko <alex@shishenko.com>"]
 
