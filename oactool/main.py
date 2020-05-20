@@ -31,6 +31,7 @@ def make_docopt(specification):
         print(render_docopt(spec))
     except (pydantic.ValidationError, json.JSONDecodeError) as e:
         print(e, file=sys.stderr)
+        exit(1)
 
 
 @cli.command()
@@ -41,6 +42,7 @@ def make_fish(specification):
         print(render_fish(spec))
     except (pydantic.ValidationError, json.JSONDecodeError) as e:
         print(e, file=sys.stderr)
+        exit(1)
 
 
 @cli.command()
@@ -51,6 +53,7 @@ def validate(specification):
         print("Specification is correct!")
     except (pydantic.ValidationError, json.JSONDecodeError) as e:
         print(e, file=sys.stderr)
+        exit(1)
 
 
 @cli.command()
@@ -62,6 +65,7 @@ def simplify(specification):
         print(Specification.validate(spec).json(exclude_unset=True))
     except (pydantic.ValidationError, json.JSONDecodeError) as e:
         print(e, file=sys.stderr)
+        exit(1)
 
 
 @cli.command()
