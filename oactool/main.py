@@ -16,9 +16,10 @@ from oactool.spec_parse import unref_spec
 @click.option("--openautocomplete", flag_value=True)
 def cli(ctx, openautocomplete):
     if ctx.invoked_subcommand is None and openautocomplete:
-        click.echo(
+        click.secho(
             "\U0001F605 Well, not yet!\nWe use Click for handling CLI arguments, so we need a module, that could"
-            "extract command line info using Click introspection"
+            "extract command line info using Click introspection",
+            fg="yellow",
         )
         exit(1)
 
@@ -46,13 +47,19 @@ def make_fish(specification):
 
 
 @cli.command()
-@click.argument("specification", required=True, type=click.File("rb"))
-def validate(specification):
-    try:
-        Specification.parse_obj(unref_spec(json.loads(specification.read())))
-        print("Specification is correct!")
-    except (pydantic.ValidationError, json.JSONDecodeError) as e:
-        print(e, file=sys.stderr)
+@click.argument("specifications", nargs=-1, type=click.File("rb"))
+def validate(specifications):
+    fail = False
+
+    for specification in specifications:
+        try:
+            Specification.parse_obj(unref_spec(json.loads(specification.read())))
+            click.secho(f"[{specification.name}] Specification is correct!", fg="green")
+        except (pydantic.ValidationError, json.JSONDecodeError) as e:
+            click.secho(f"[{specification.name}] {e}", fg="red")
+            fail = True
+
+    if fail:
         exit(1)
 
 

@@ -31,11 +31,12 @@ skip_glob = ".git,.venv"
 
 [tool.poetry]
 name = "oactool"
-version = "0.1.0"
+version = "0.1.2"
 description = ""
 packages = [
     { include = "oactool" }
 ]
+readme = "README.md"
 license = "MIT"
 homepage = "https://github.com/openautocomplete/oactool"
 repository = "https://github.com/openautocomplete/oactool"
@@ -51,6 +52,7 @@ jsonref = "^0.2"
 click = "^7.1.2"
 pydantic = "^1.5.1"
 more-itertools = "^8.3.0"
+colorama = "^0.4.3"
 
 [tool.poetry.dev-dependencies]
 black = "^19.10b0"
