@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from enum import Enum
-from typing import Dict, List, Optional, TypeVar, Union
+from typing import Dict, List, Literal, Optional, Union
 
 from pydantic import BaseModel, Field, root_validator, validator
 
@@ -42,23 +42,23 @@ class PatternType(Enum):
 
 
 class BasePattern(BaseModel):
-    type: PatternType
+    type: str
     repeated: bool = False
     optional: bool = False
 
 
 class CommandPattern(BasePattern):
-    type: PatternType = Field(default=PatternType.COMMAND.value, const=True)
+    type: Literal["command"]
     command: Command
 
 
 class ArgumentPattern(BasePattern):
-    type: PatternType = Field(default=PatternType.ARGUMENT.value, const=True)
+    type: Literal["argument"]
     argument: Argument
 
 
 class OptionPattern(BasePattern):
-    type: PatternType = Field(default=PatternType.OPTION.value, const=True)
+    type: Literal["option"]
     option: Option
     separators_long: List[str] = ["=", " "]
     separators_short: List[str] = [" ", ""]
@@ -69,12 +69,10 @@ class OptionPattern(BasePattern):
 
 
 class GroupPattern(BasePattern):
-    type: PatternType = Field(default=PatternType.GROUP.value, const=True)
+    type: Literal["group"]
     exclusive: bool = False
     patterns: List[Union[GroupPattern, CommandPattern, ArgumentPattern, OptionPattern]]
 
-
-SupportedPatternT = TypeVar("SupportedPatternT", GroupPattern, CommandPattern, ArgumentPattern, OptionPattern)
 
 GroupPattern.update_forward_refs()
 

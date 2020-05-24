@@ -5,10 +5,15 @@ import sys
 import click
 import pydantic
 
+from oactool.parsers.man import do_parse_man
 from oactool.renderers.docopt import render_docopt
 from oactool.renderers.fish import render_fish
 from oactool.schema import Components, Specification
 from oactool.spec_parse import unref_spec
+
+
+def print_spec(spec: Specification) -> str:
+    return spec.json(exclude_unset=True, indent=2)
 
 
 @click.group(invoke_without_command=True)
@@ -25,7 +30,7 @@ def cli(ctx, openautocomplete):
 
 
 @cli.command()
-@click.argument("specification", required=True, type=click.File("rb"))
+@click.argument("specification", required=True, type=click.File("rb"), default=sys.stdin)
 def make_docopt(specification):
     try:
         spec = Specification.parse_obj(unref_spec(json.loads(specification.read())))
@@ -36,7 +41,7 @@ def make_docopt(specification):
 
 
 @cli.command()
-@click.argument("specification", required=True, type=click.File("rb"))
+@click.argument("specification", required=True, type=click.File("rb"), default=sys.stdin)
 def make_fish(specification):
     try:
         spec = Specification.parse_obj(unref_spec(json.loads(specification.read())))
@@ -64,12 +69,22 @@ def validate(specifications):
 
 
 @cli.command()
-@click.argument("specification", required=True, type=click.File("rb"))
+@click.argument("specification", required=True, type=click.File("rb"), default=sys.stdin)
 def simplify(specification):
     try:
         spec = Specification.parse_obj(unref_spec(json.loads(specification.read())))
         spec.components = Components()
-        print(Specification.validate(spec).json(exclude_unset=True))
+        print(print_spec(Specification.validate(spec)))
+    except (pydantic.ValidationError, json.JSONDecodeError) as e:
+        print(e, file=sys.stderr)
+        exit(1)
+
+
+@cli.command()
+@click.argument("command", required=True, type=str)
+def parse_man(command):
+    try:
+        print(print_spec(do_parse_man(command)))
     except (pydantic.ValidationError, json.JSONDecodeError) as e:
         print(e, file=sys.stderr)
         exit(1)

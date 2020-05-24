@@ -2,20 +2,11 @@ from __future__ import annotations
 
 import shutil
 import textwrap
-from typing import Iterator, List, Optional, Tuple
+from typing import Any, Iterator, List, Optional, Tuple, Type
 
 from more_itertools import unique_everseen
 
-from oactool.schema import (
-    ArgumentPattern,
-    BasePattern,
-    Cli,
-    CommandPattern,
-    GroupPattern,
-    OptionPattern,
-    PatternType,
-    Specification,
-)
+from oactool.schema import ArgumentPattern, BasePattern, Cli, CommandPattern, GroupPattern, OptionPattern, Specification
 
 
 def format_token(items: List[str], exclusive: bool, optional: bool, repeated: bool, root: bool = False) -> str:
@@ -35,7 +26,10 @@ def format_token(items: List[str], exclusive: bool, optional: bool, repeated: bo
 
 def format_argument(argument_p: ArgumentPattern) -> str:
     return format_token(
-        [f"<{argument_p.argument.name}>"], exclusive=False, optional=argument_p.optional, repeated=argument_p.repeated,
+        [f"<{argument_p.argument.name or 'arg'}>"],
+        exclusive=False,
+        optional=argument_p.optional,
+        repeated=argument_p.repeated,
     )
 
 
@@ -88,14 +82,14 @@ def format_pattern(p: BasePattern) -> str:
     return ""
 
 
-def get_unique_recursively(pattern_type: PatternType, cli: Cli):
+def get_unique_recursively(pattern_type: Type[Any], cli: Cli):
     def walk_groups(group_list: List[GroupPattern]):
         for group_pattern in group_list:
             for pattern in group_pattern.patterns:
                 if isinstance(pattern, GroupPattern):
                     for nested_item in walk_groups([pattern]):
                         yield nested_item
-                elif pattern.type == pattern_type:
+                elif isinstance(pattern, pattern_type):
                     yield pattern
 
     for option in unique_everseen(walk_groups(cli.pattern_groups)):
@@ -103,7 +97,7 @@ def get_unique_recursively(pattern_type: PatternType, cli: Cli):
 
 
 def make_options(cli: Cli) -> Iterator[Tuple[str, str]]:
-    for option_p in get_unique_recursively(PatternType.OPTION, cli):
+    for option_p in get_unique_recursively(OptionPattern, cli):
         yield format_option(option_p, usage=True), option_p.option.description or ""
 
 
