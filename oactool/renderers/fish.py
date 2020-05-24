@@ -53,7 +53,7 @@ def fishize_subcommand(command_p: CommandPattern, cli: Cli, cond: Optional[str])
 def make_no_subcommand_function(no_subcommand_name: str, commands: Iterable[str]):
     commands_serialized = " ".join(commands)
     if len(commands_serialized) == 0:
-        return ""
+        return f"function {no_subcommand_name}\n\treturn 0\nend"
 
     return """function {no_subcommand_name}
     for i in (commandline -opc)
