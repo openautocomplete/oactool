@@ -12,8 +12,6 @@ def fishize_option(option_p: OptionPattern, cli: Cli, cond: Optional[str]):
     comp: List[str] = ["complete", "-c", cli.name]
     if cond:
         comp += ["-n", cond]
-    if option_p.option.description:
-        comp += ["-d", option_p.option.description]
 
     if option_p.prefix_short == "-":
         for x in option_p.option.names_short:
@@ -29,6 +27,9 @@ def fishize_option(option_p: OptionPattern, cli: Cli, cond: Optional[str]):
             comp += ["-o", x]
     else:
         print("Long options, defined in spec are not supported by fish completions right now", file=sys.stderr)
+
+    if option_p.option.description:
+        comp += ["-d", option_p.option.description]
 
     if option_p.argument:
         comp += ["-r"]

@@ -2,7 +2,7 @@ import re
 import subprocess
 from typing import Iterable, List, Tuple
 
-from oactool.schema import Cli, Components, GroupPattern, OpenAutoCompletion, Option, OptionPattern, Specification
+from oactool.schema import Cli, Components, GroupPattern, OpenAutoComplete, Option, OptionPattern, Specification
 
 
 def clean_description(s: str) -> str:
@@ -58,7 +58,7 @@ def do_parse_man(command: str) -> Specification:
     )
 
     return Specification(
-        openautocompletion=OpenAutoCompletion(version="1.0"),
+        openautocomplete=OpenAutoComplete(version="1.0"),
         components=Components(),
         cli=Cli(name=command, pattern_groups=[main_pattern]),
     )

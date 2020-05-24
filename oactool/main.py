@@ -5,6 +5,7 @@ import sys
 import click
 import pydantic
 
+from oactool.parsers.fish import parse_fish_document
 from oactool.parsers.man import do_parse_man
 from oactool.renderers.docopt import render_docopt
 from oactool.renderers.fish import render_fish
@@ -85,6 +86,16 @@ def simplify(specification):
 def parse_man(command):
     try:
         print(print_spec(do_parse_man(command)))
+    except (pydantic.ValidationError, json.JSONDecodeError) as e:
+        print(e, file=sys.stderr)
+        exit(1)
+
+
+@cli.command()
+@click.argument("fish_complete", required=True, type=click.File("r"), default=sys.stdin)
+def parse_fish(fish_complete):
+    try:
+        print(print_spec(parse_fish_document(fish_complete.read())))
     except (pydantic.ValidationError, json.JSONDecodeError) as e:
         print(e, file=sys.stderr)
         exit(1)

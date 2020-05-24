@@ -88,11 +88,11 @@ class Cli(BaseModel):
         return v
 
 
-class OpenAutoCompletion(BaseModel):
+class OpenAutoComplete(BaseModel):
     version: str = Field(regex=r"^\d+.\d+$")
 
 
 class Specification(BaseModel):
-    openautocompletion: OpenAutoCompletion
+    openautocomplete: OpenAutoComplete
     components: Components
     cli: Cli
