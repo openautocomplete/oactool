@@ -17,7 +17,7 @@ from oactool.spec_parse import unref_spec
 def cli(ctx, openautocomplete):
     if ctx.invoked_subcommand is None and openautocomplete:
         click.secho(
-            "\U0001F605 Well, not yet!\nWe use Click for handling CLI arguments, so we need a module, that could"
+            "\U0001F605 Well, not yet!\nWe use Click for handling CLI arguments, so we need a module, that could "
             "extract command line info using Click introspection",
             fg="yellow",
         )

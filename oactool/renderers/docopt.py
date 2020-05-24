@@ -47,12 +47,12 @@ def format_option_single(name: str, arg: Optional[ArgumentPattern], arg_separato
     return f"{prefix}{name}"
 
 
-def format_option(option_p: OptionPattern, cli: Cli, usage=False) -> str:
+def format_option(option_p: OptionPattern, usage=False) -> str:
     names = [
-        format_option_single(name, option_p.argument, cli.option_separators_short[0], cli.option_prefix_short)
+        format_option_single(name, option_p.argument, option_p.separators_short[0], option_p.prefix_short)
         for name in option_p.option.names_short
     ] + [
-        format_option_single(name, option_p.argument, cli.option_separators_long[0], cli.option_prefix_long)
+        format_option_single(name, option_p.argument, option_p.separators_long[0], option_p.prefix_long)
         for name in option_p.option.names_long
     ]
 
@@ -62,9 +62,9 @@ def format_option(option_p: OptionPattern, cli: Cli, usage=False) -> str:
     return format_token(names, exclusive=True, optional=option_p.optional, repeated=option_p.repeated)
 
 
-def format_group(group: GroupPattern, cli: Cli, root=False) -> str:
+def format_group(group: GroupPattern, root=False) -> str:
     return format_token(
-        [format_pattern(s, cli) for s in group.patterns],
+        [format_pattern(s) for s in group.patterns],
         exclusive=group.exclusive,
         repeated=group.repeated,
         optional=group.optional,
@@ -76,15 +76,15 @@ def format_command(p: CommandPattern) -> str:
     return format_token([p.command.names[0]], exclusive=False, repeated=p.repeated, optional=p.optional)
 
 
-def format_pattern(p: BasePattern, cli: Cli) -> str:
+def format_pattern(p: BasePattern) -> str:
     if isinstance(p, CommandPattern):
         return format_command(p)
     elif isinstance(p, ArgumentPattern):
         return format_argument(p)
     elif isinstance(p, OptionPattern):
-        return format_option(p, cli)
+        return format_option(p)
     elif isinstance(p, GroupPattern):
-        return format_group(p, cli)
+        return format_group(p)
     return ""
 
 
@@ -104,13 +104,13 @@ def get_unique_recursively(pattern_type: PatternType, cli: Cli):
 
 def make_options(cli: Cli) -> Iterator[Tuple[str, str]]:
     for option_p in get_unique_recursively(PatternType.OPTION, cli):
-        yield format_option(option_p, cli, usage=True), option_p.option.description or ""
+        yield format_option(option_p, usage=True), option_p.option.description or ""
 
 
 def make_usage_block(cli: Cli) -> str:
     usage_lines = ["Usage:"]
     for pattern_group in cli.pattern_groups:
-        usage_lines += [f"  {cli.name} {format_group(pattern_group, cli, root=True)}"]
+        usage_lines += [f"  {cli.name} {format_group(pattern_group, root=True)}"]
     return "\n".join(usage_lines)
 
 

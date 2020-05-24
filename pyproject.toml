@@ -31,7 +31,7 @@ skip_glob = ".git,.venv"
 
 [tool.poetry]
 name = "oactool"
-version = "0.1.2"
+version = "0.1.3"
 description = ""
 packages = [
     { include = "oactool" }

@@ -15,16 +15,16 @@ def fishize_option(option_p: OptionPattern, cli: Cli, cond: Optional[str]):
     if option_p.option.description:
         comp += ["-d", option_p.option.description]
 
-    if cli.option_prefix_short == "-":
+    if option_p.prefix_short == "-":
         for x in option_p.option.names_short:
             comp += ["-s", x]
     else:
         print("Short options, defined in spec are not supported by fish completions right now", file=sys.stderr)
 
-    if cli.option_prefix_long == "--":
+    if option_p.prefix_long == "--":
         for x in option_p.option.names_long:
             comp += ["-l", x]
-    elif cli.option_prefix_long == "-":
+    elif option_p.prefix_long == "-":
         for x in option_p.option.names_long:
             comp += ["-o", x]
     else:
@@ -89,7 +89,7 @@ def render_fish(spec: Specification):
 
     return "\n".join(
         [
-            "# Generated using OpenAutoComplete specification",
+            "# Generated using OpenAutoComplete specification. See: https://openautocomplete.dev/",
             make_no_subcommand_function(no_subcommand_name, commands=unique_everseen(root_commands)),
             *unique_everseen(completes),
         ]

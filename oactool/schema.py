@@ -60,6 +60,11 @@ class ArgumentPattern(BasePattern):
 class OptionPattern(BasePattern):
     type: PatternType = Field(default=PatternType.OPTION.value, const=True)
     option: Option
+    separators_long: List[str] = ["=", " "]
+    separators_short: List[str] = [" ", ""]
+    prefix_long: str = "--"
+    prefix_short: str = "-"
+
     argument: Optional[ArgumentPattern]
 
 
@@ -76,10 +81,6 @@ GroupPattern.update_forward_refs()
 
 class Cli(BaseModel):
     name: str
-    option_separators_long: List[str] = ["=", " "]
-    option_separators_short: List[str] = [" ", ""]
-    option_prefix_long: str = "--"
-    option_prefix_short: str = "-"
     pattern_groups: List[GroupPattern]
 
     @validator("pattern_groups")
