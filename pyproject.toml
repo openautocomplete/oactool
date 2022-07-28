@@ -61,7 +61,7 @@ flake8 = "^3.8.2"
 isort = "^4.3.21"
 pre-commit = "^2.4.0"
 mypy = "^0.780"
-devtools = "^0.5.1"
+devtools = "^0.9.0"
 
 [build-system]
 requires = ["poetry>=0.12"]
