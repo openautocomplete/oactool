@@ -48,7 +48,7 @@ authors = ["Alexander Shishenko <alex@shishenko.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-jsonref = "^0.2"
+jsonref = ">=0.2,<0.4"
 click = "^7.1.2"
 pydantic = "^1.5.1"
 more-itertools = "^8.3.0"
