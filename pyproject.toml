@@ -51,7 +51,7 @@ python = "^3.8"
 jsonref = "^0.2"
 click = "^7.1.2"
 pydantic = "^1.5.1"
-more-itertools = "^8.3.0"
+more-itertools = ">=8.3,<10.0"
 colorama = "^0.4.3"
 
 [tool.poetry.dev-dependencies]
